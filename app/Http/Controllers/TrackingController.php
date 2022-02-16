@@ -27,12 +27,8 @@ class TrackingController extends Controller
     {
         $input = $request->all();
 
-        $user = auth()->user();
-
-        $input['user_id'] = $user->id;
-
         try {
-            $tracking = $this->trackingService->create($input);
+            $tracking = $this->trackingService->create($input, auth()->user());
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Falha. Tente novamente.'

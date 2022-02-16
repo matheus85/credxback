@@ -6,6 +6,7 @@ use App\Services\Contracts\TrackingServiceContract;
 use App\Repositories\Contracts\TrackingRepositoryContract;
 use App\Models\Tracking;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\User;
 
 class TrackingService implements TrackingServiceContract
 {
@@ -13,9 +14,17 @@ class TrackingService implements TrackingServiceContract
     {
     }
 
-    public function create(array $data) : Tracking
+    public function create(array $data, User $user) : Tracking
     {
-        return $this->trackingRepository->create($data);
+        $data['user_id'] = $user->id;
+
+        $tracking = $this->trackingRepository->create($data);
+
+        if (!empty($tracking)) {
+            $user->createTrackingNotification();
+        }
+
+        return $tracking;
     }
 
     public function getAll(int $userId) : Collection

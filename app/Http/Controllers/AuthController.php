@@ -22,7 +22,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($input)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'These credentials do not match our records.'
             ], 401);
         }
 
